@@ -11,19 +11,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to generate an HTML list from an array of items
-    function generateListArtworks(artwork, images) {
-        return `<ul>${items.map((item, index) => {
-            const imageUrl = `src="${images[index]}"`;
+    function generateListArtworks(artworkData, artworkImages) {
+        return `<ul>${artworkData.map((item, index) => {
+            const imageUrl = `src=${artworkImages[index]}`;
             return `<li>
-                    <img ${imageUrl} alt="${item}" width="200">
-                    <p>${item}</p>
+                    <img ${imageUrl} alt="${item.title}" width="200">
+                    <p>${item.title}</p>
                 </li>`;
         }).join('')}</ul>`;
        }
 
     function generateListArtist(cleanArtistsData) {
         return `<ul>${cleanArtistsData.map((item) => {
-            const title = item.title
+            const title = item.title;
             const birthDate = item.birth_date ? `<span class="date">Birth Date: ${item.birth_date}</span>` : '';
             const deathDate = item.death_date ? `<span class="date">Death Date: ${item.death_date}</span>` : '';
             
@@ -45,18 +45,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     artworksLink.addEventListener('click', async () => {
         const artworksData = await fetchData('https://api.artic.edu/api/v1/artworks');
-        // // Customize this part to display relevant artwork data
-        console.log(artworksData)
+        console.log(artworksData);
+
         // const artworkTitles = artworksData.data.map(artwork => artwork.title);
-        const artworkData = artworksData.data
-        const artworkImage = artworksData.data.map(artwork => `https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`);
-        const content = `<h2>Artworks</h2>${generateListArtworks(artworkData, artworkImage)}`;
+        const artworkData = artworksData.data;
+        const artworkImages = artworkData.map(artwork =>`https://www.artic.edu/iiif/2/${artwork.image_id}/full/843,/0/default.jpg`);
+        const content = `<h2>Artworks</h2>${generateListArtworks(artworkData, artworkImages)}`;
         updateContent(content);
     });
 
     artistsLink.addEventListener('click', async () => {
         const artistsData = await fetchData('https://api.artic.edu/api/v1/agents');
-        const cleanArtistsData = artistsData.data
+        const cleanArtistsData = artistsData.data;
         const content = `<h2>Artists</h2>${generateListArtist(cleanArtistsData)}`;
         updateContent(content);
     });
